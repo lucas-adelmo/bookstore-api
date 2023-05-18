@@ -1,8 +1,15 @@
 import express from "express";
+import db from "./config/dbConnect.js"
+
+db.on("error", console.log.bind(console, "Connection error"))
+db.once("open", () => {
+    console.log('Connected successfully')
+})
 
 const app = express()
 
-// This is a built-in middleware function in Express. It parses incoming requests with JSON payloads
+// The statement bellow express.json() is a built-in middleware function in Express. 
+// It parses incoming requests with JSON payloads.
 // A new body object containing the parsed data is populated on the request object after the middleware
 app.use(express.json()) 
 
@@ -21,7 +28,7 @@ app.get('/books', (req, res) => {
 })
 
 app.get('/books/:id', (req, res) =>{
-    let index = getBook(req.params.id)
+    let index = getIndex(req.params.id)
     res.json(books[index])
 })
 
@@ -31,19 +38,19 @@ app.post('/books', (req, res) => {
 })
 
 app.put('/books/:id', (req, res) =>{
-    let index = getBook(req.params.id)
+    let index = getIndex(req.params.id)
     books[index].title = req.body.title
     res.json(books)
 })
 
 app.delete('/books/:id', (req, res) =>{
     let {id} = req.params //destructuring assignment
-    let index = getBook(id)
+    let index = getIndex(id)
     res.send(`The book "${books[index].title}" has been removed`)
     books.splice(index,1)
 })
 
-function getBook(id){
+function getIndex(id){
     return books.findIndex(element => element.id == id)
 }
 
