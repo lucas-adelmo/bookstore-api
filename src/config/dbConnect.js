@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 // You can access the default connection using mongoose.connection.
 
 try{
-    await mongoose.connect("mongodb+srv://lucasadelmo2:Qm4iBtLKvqlth4Ym@bookstore.zqukrqh.mongodb.net/bookstore-api");
+    await mongoose.connect("mongodb+srv://usertest:UWlBMnwjnsahk9gU@bookstore.zqukrqh.mongodb.net/bookstore-api");
     console.log('Connected successfully to the database')
 }catch(err){
     console.log("Database connection error",err) 
