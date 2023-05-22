@@ -1,57 +1,21 @@
 import express from "express";
-import db from "./config/dbConnect.js"
+import books from "./models/Book.js";
+import connectionAccess from "./config/dbConnect.js";
+import routes from "./routes/index.js";
 
-db.on("error", console.log.bind(console, "Connection error"))
-db.once("open", () => {
-    console.log('Connected successfully')
-})
-
+connectionAccess()
 const app = express()
-
-// The statement bellow express.json() is a built-in middleware function in Express. 
-// It parses incoming requests with JSON payloads.
-// A new body object containing the parsed data is populated on the request object after the middleware
-app.use(express.json()) 
-
-const books = [
-    {id: 1, "title": "The Godfather"},
-    {id: 2, "title": "Inception"},
-    {id: 3, "title": "Spider Man"}
-]
-
-app.get('/', (req, res) => {
-    res.status(200).send("Hello world");
-})
-
-app.get('/books', (req, res) => {
-    res.status(200).json(books);
-})
-
-app.get('/books/:id', (req, res) =>{
-    let index = getIndex(req.params.id)
-    res.json(books[index])
-})
-
-app.post('/books', (req, res) => {
-    books.push(req.body)
-    res.status(201).send("Registration completed successfully")
-})
-
-app.put('/books/:id', (req, res) =>{
-    let index = getIndex(req.params.id)
-    books[index].title = req.body.title
-    res.json(books)
-})
-
-app.delete('/books/:id', (req, res) =>{
-    let {id} = req.params //destructuring assignment
-    let index = getIndex(id)
-    res.send(`The book "${books[index].title}" has been removed`)
-    books.splice(index,1)
-})
-
-function getIndex(id){
-    return books.findIndex(element => element.id == id)
-}
+routes(app)
 
 export default app;
+
+// In Express, the app object represents the application and provides a way to define routes and middleware. 
+// When you export app using export default app, you are exporting the entire Express application object.
+// The app.get, app.post, app.put, and app.delete methods are part of the app object itself. 
+// These methods allow you to define routes and handle HTTP requests for those routes.
+// When you import the app object in your first file (import app from "./src/app.js"), you are importing 
+// the entire app object, including all the defined routes and middleware. 
+// Therefore, you have access to all the routes defined in the app object, such as app.get('/books/:id'), 
+// app.post('/books/'), etc., even though you only exported the app object itself.
+// So, when you execute the first file using Node.js, you can access the app.get method because it is 
+// part of the imported app object.
