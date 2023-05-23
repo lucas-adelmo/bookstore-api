@@ -6,9 +6,9 @@ const {Schema} = mongoose;
 
 const bookSchema = new Schema(
     {
-        id:{type: String},
+        id:{type: String}, //The SchemaType here is String
         title:{type: String, required:true},
-        author:{type: String, required:true},
+        author:{type: Schema.Types.ObjectId, ref: 'authors', required: true},
         publishing:{type: String, required:true},
         numberOfPages:{type: Number}
     }
@@ -17,6 +17,6 @@ const bookSchema = new Schema(
 // A model is a class with which we construct documents. In this case, each document will be a book 
 // with properties and behaviors as declared in our schema.
 
-const books = mongoose.model('books', bookSchema)
+const Books = mongoose.model('books', bookSchema)
 
-export default books;
+export default Books;

@@ -11,6 +11,7 @@ const router = express.Router();
 
 router
     .get("/books", bookController.listBooks)
+    .get("/books/search?", bookController.listBooksByPublisher) //The route "/books/search?" must come before "/books/:id". Otherwise the routes gonna be confused with each other 
     .get("/books/:id", bookController.getBookById)
     .post("/books", bookController.registerBook)
     .put('/books/:id', bookController.updateBook)
@@ -20,5 +21,6 @@ router
 // for method chaining. Each method call in the chain adds a specific route and associates it with 
 // a corresponding controller function. The chaining syntax allows for a concise and readable way to 
 // define multiple routes in a single code block. It does not imply that one method is inside the other.
+
 
 export default router;

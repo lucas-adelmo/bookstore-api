@@ -1,13 +1,12 @@
 /* booksController implements the methods */
 
-import { Schema } from "mongoose";
-import books from "../models/Book.js";
+import Books from "../models/Book.js";
 
 const bookController = {
 
     listBooks : async function(req, res){
         try {
-            const query = await books.find()// It returns a Query obj. `query` is an instance of `Query`
+            const query = await Books.find().populate("author")
             res.status(200).json(query);
         } catch(err){
             res.status(500).json(err)
@@ -18,7 +17,7 @@ const bookController = {
     getBookById : async function(req, res){
         try {
             let {id} = req.params
-            const book = await books.findById(id)
+            const book = await Books.findById(id).populate("author")
             res.status(200).json(book);
         } catch(err){
             res.status(400).json(err)
@@ -28,8 +27,8 @@ const bookController = {
 
     registerBook : async function(req, res){
         try{
-            const book = new books(req.body); //Creating a document from books model
-            await book.save()
+            const book = await new Books(req.body).populate("author"); //Creating a document from Books model
+            book.save()
             res.status(201).send(book)
         }catch(err){
             res.status(500).send(`Operation failed`)
@@ -40,7 +39,7 @@ const bookController = {
     updateBook: async function(req, res){
         try{
             let {id} = req.params
-            await books.findByIdAndUpdate(id, {$set: req.body})
+            await Books.findByIdAndUpdate(id, {$set: req.body}).populate("author")
             res.status(201).send(`The operation was a success`)
         }catch(err){
             res.status(500).send(`Operation failed`)
@@ -51,8 +50,19 @@ const bookController = {
     deleteBook: async function(req, res){
         try{
             let {id} = req.params
-            await books.findByIdAndDelete(id)
+            await Books.findByIdAndDelete(id).populate("author")
             res.status(201).send(`The operation was a success`)
+        }catch(err){
+            res.status(500).send(`Operation failed`)
+            throw err
+        }
+    },
+
+    listBooksByPublisher: async function(req,res){
+        try{
+            let {publishing} = req.query
+            const query = await Books.find({"publishing": publishing})
+            res.status(200).send(query)
         }catch(err){
             res.status(500).send(`Operation failed`)
             throw err
