@@ -11,7 +11,7 @@ const authorSchema = new Schema(
     {
         versionKey: false
     }
-)
+);
 
 const Authors = mongoose.model("authors",authorSchema);
 

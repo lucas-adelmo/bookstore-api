@@ -1,11 +1,14 @@
 import express from "express";
-import books from "./models/Book.js";
 import connectionAccess from "./config/dbConnect.js";
 import routes from "./routes/index.js";
+import errorManipulator from "./middlewares/errorManipulator.js";
 
-connectionAccess()
-const app = express()
-routes(app)
+connectionAccess();
+const app = express();
+routes(app);
+
+// eslint-disable-next-line no-unused-vars
+app.use(errorManipulator);
 
 export default app;
 

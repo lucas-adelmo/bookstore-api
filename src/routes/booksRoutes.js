@@ -1,4 +1,5 @@
-/* booksRoutes establish the routes used by verbs http and the methods to treat the requesitions e responses*/
+/* booksRoutes establish the routes used by verbs http and the methods to treat the requesitions
+ e responses*/
 
 import express from "express";
 import bookController from "../controllers/booksController.js";
@@ -11,11 +12,14 @@ const router = express.Router();
 
 router
     .get("/books", bookController.listBooks)
-    .get("/books/search?", bookController.listBooksByPublisher) //The route "/books/search?" must come before "/books/:id". Otherwise the routes gonna be confused with each other 
+    .get("/books/search?", bookController.listBooksByPublisher) 
     .get("/books/:id", bookController.getBookById)
     .post("/books", bookController.registerBook)
-    .put('/books/:id', bookController.updateBook)
-    .delete('/books/:id', bookController.deleteBook)
+    .put("/books/:id", bookController.updateBook)
+    .delete("/books/:id", bookController.deleteBook);
+
+// The route "/books/search?" must come before "/books/:id". Otherwise the routes 
+// gonna be confused with each other 
 
 // The chaining is possible because both .get() and .post() methods return the router object, allowing 
 // for method chaining. Each method call in the chain adds a specific route and associates it with 

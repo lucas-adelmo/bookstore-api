@@ -3,16 +3,16 @@ import books from "./booksRoutes.js";
 import authors from "./authorRoutes.js";
 
 const routes = (app) => {
-    app.get('/',(req,res)=>{
-        res.status(200).send("Hello world");
-    })
+    app.get("/",(req,res)=>{
+        res.status(200).send("Welcome to my Book Store");
+    });
 
     app.use(
-        express.json(),
-        books,
+        express.json(), //native middleware from express
+        books, //books and authors are routers, used as middlewares
         authors
-    )
-}
+    );
+};
 
 // The statement express.json() is a built-in middleware function in Express. 
 // It parses incoming requests with JSON payloads.

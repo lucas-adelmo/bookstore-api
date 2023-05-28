@@ -1,4 +1,5 @@
-import app from "./src/app.js" // This app starts a server 
+import app from "./src/app.js"; // This app starts a server 
+
 const port = process.env.PORT || 3000;
 
 // Many times, we might upload this application to Heroku or another server that is not a local server. 
@@ -7,7 +8,7 @@ const port = process.env.PORT || 3000;
 
 // The app.listen() method creates a listener server on the specified port or path.
 app.listen((port), ()=>{
-    console.log(`The server are listening on http://localhost:${port}`)
+    console.log(`The server are listening on http://localhost:${port}`);
 });
 
 // When the node API is running you cannot make file changes. However, you can use the package called 

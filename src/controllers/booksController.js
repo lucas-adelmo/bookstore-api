@@ -1,74 +1,72 @@
-/* booksController implements the methods */
+/* booksController implements the methods (middlewares specifcally) */
 
 import Books from "../models/Book.js";
 
 const bookController = {
 
-    listBooks : async function(req, res){
+    listBooks : async function(req, res, next){
         try {
-            const query = await Books.find().populate("author")
+            const query = await Books.find().populate("author");
             res.status(200).json(query);
         } catch(err){
-            res.status(500).json(err)
-            console.log(err)
+            next(err);
         }
     },
 
-    getBookById : async function(req, res){
+    getBookById : async function(req, res, next){
         try {
-            let {id} = req.params
-            const book = await Books.findById(id).populate("author")
-            res.status(200).json(book);
+            let {id} = req.params;
+            const book = await Books.findById(id).populate("author");
+            if (book !== null){
+                res.status(200).json(book);
+            }else{
+                res.status(404).send({message: "Book not founded."});
+            }
         } catch(err){
-            res.status(400).json(err)
-            console.log(err)
+            next(err);
         }
     },
 
-    registerBook : async function(req, res){
+    registerBook : async function(req, res, next){
         try{
             const book = await new Books(req.body).populate("author"); //Creating a document from Books model
-            book.save()
-            res.status(201).send(book)
+            book.save();
+            res.status(201).send(book);
         }catch(err){
-            res.status(500).send(`Operation failed`)
-            throw err
+            next(err);
         }
     },
 
-    updateBook: async function(req, res){
+    updateBook: async function(req, res, next){
         try{
-            let {id} = req.params
-            await Books.findByIdAndUpdate(id, {$set: req.body}).populate("author")
-            res.status(201).send(`The operation was a success`)
+            let {id} = req.params;
+            await Books.findByIdAndUpdate(id, {$set: req.body}).populate("author");
+            res.status(200).send("The operation was a success");
         }catch(err){
-            res.status(500).send(`Operation failed`)
-            throw err
+            next(err);
         }
     },
 
-    deleteBook: async function(req, res){
+    deleteBook: async function(req, res, next){
         try{
-            let {id} = req.params
-            await Books.findByIdAndDelete(id).populate("author")
-            res.status(201).send(`The operation was a success`)
+            let {id} = req.params;
+            await Books.findByIdAndDelete(id).populate("author");
+            res.status(200).send("The operation was a success");
         }catch(err){
-            res.status(500).send(`Operation failed`)
-            throw err
+            next(err);
         }
     },
 
-    listBooksByPublisher: async function(req,res){
+    listBooksByPublisher: async function(req,res, next){
         try{
-            let {publishing} = req.query
-            const query = await Books.find({"publishing": publishing})
-            res.status(200).send(query)
+            let {publishing} = req.query;
+            const query = await Books.find({"publishing": publishing});
+            res.status(200).send(query);
         }catch(err){
-            res.status(500).send(`Operation failed`)
-            throw err
+            next(err);
         }
     }
 
-}
+};
 
 export default bookController;
