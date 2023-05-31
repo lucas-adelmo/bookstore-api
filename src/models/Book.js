@@ -7,9 +7,21 @@ const {Schema} = mongoose;
 const bookSchema = new Schema(
     {
         id:{type: String}, //The SchemaType here is String
-        title:{type: String, required:true},
-        author:[{type: Schema.Types.ObjectId, ref: "authors", required: true}],
-        publishing:{type: String, required:true},
+        title:{
+            type: String, 
+            required:[true, "title is required"]
+        },
+        author:[
+            {
+                type: Schema.Types.ObjectId, 
+                ref: "authors", 
+                required: [true, "author's id is required"]
+            }
+        ],
+        publishing:{
+            type: String, 
+            required:[true, "The publishing is required"]
+        },
         numberPages:{type: Number}
     }
 );

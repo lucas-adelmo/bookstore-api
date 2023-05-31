@@ -1,14 +1,14 @@
 import express from "express";
 import connectionAccess from "./config/dbConnect.js";
 import routes from "./routes/index.js";
-import errorManipulator from "./middlewares/errorManipulator.js";
+import errorHandling from "./middlewares/errorHandling.js";
 
 connectionAccess();
 const app = express();
 routes(app);
 
 // eslint-disable-next-line no-unused-vars
-app.use(errorManipulator);
+app.use(errorHandling);
 
 export default app;
 

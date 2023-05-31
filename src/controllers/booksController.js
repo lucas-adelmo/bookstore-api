@@ -30,7 +30,7 @@ const bookController = {
     registerBook : async function(req, res, next){
         try{
             const book = await new Books(req.body).populate("author"); //Creating a document from Books model
-            book.save();
+            await book.save();
             res.status(201).send(book);
         }catch(err){
             next(err);

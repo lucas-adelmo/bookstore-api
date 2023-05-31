@@ -5,7 +5,10 @@ const {Schema} = mongoose;
 const authorSchema = new Schema(
     {
         id:{type:String},
-        name:{type:String, required:true},
+        name:{
+            type:String, 
+            required:[true, "The author's name is required"]
+        },
         nationality:{type:String, required:false}
     },
     {

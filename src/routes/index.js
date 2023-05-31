@@ -1,6 +1,6 @@
 import express from "express";
-import books from "./booksRoutes.js";
-import authors from "./authorRoutes.js";
+import { default as customBooksRouter } from "./booksRoutes.js";
+import { default as customAuthorsRouter } from "./authorRoutes.js";
 
 const routes = (app) => {
     app.get("/",(req,res)=>{
@@ -9,8 +9,8 @@ const routes = (app) => {
 
     app.use(
         express.json(), //native middleware from express
-        books, //books and authors are routers, used as middlewares
-        authors
+        customBooksRouter, //routers are used as middlewares
+        customAuthorsRouter
     );
 };
 
