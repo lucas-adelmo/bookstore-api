@@ -1,4 +1,4 @@
-import Authors from "../models/Author.js";
+import {Authors} from "../models/index.js";
 
 const authorController = {
 

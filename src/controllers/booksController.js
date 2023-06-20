@@ -1,6 +1,6 @@
 /* booksController implements the methods (middlewares specifcally) */
 
-import Books from "../models/Book.js";
+import {Books} from "../models/index.js";
 
 const bookController = {
 

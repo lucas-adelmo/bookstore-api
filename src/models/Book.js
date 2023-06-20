@@ -20,9 +20,20 @@ const bookSchema = new Schema(
         ],
         publishing:{
             type: String, 
-            required:[true, "The publishing is required"]
+            required:[true, "The publishing is required"],
+            enum:["O'Reilly Media", "Addison-Wesley Professional"]
         },
-        numberPages:{type: Number}
+        numberPages:{
+            type: Number,
+            // min: [10, "the pag number is between 10 and 5000. You typed {VALUE}"],
+            // max:[5000, "the pag number is between 10 and 5000. You typed {VALUE}"] 
+            validate: {
+                validator: (value) => {
+                    return value>=10 && value<=5000;
+                },
+                message: "the pag number is between 10 and 5000. You typed {VALUE}"
+            }
+        }
     }
 );
 
