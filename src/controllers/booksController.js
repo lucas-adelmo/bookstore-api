@@ -60,10 +60,13 @@ const bookController = {
     listBooksByFilter: async function(req,res, next){
         try{
             let {publishing, title} = req.query;
-            const query = await Books.find({
-                "publishing": publishing,
-                "title": title
-            });
+
+            const search = {};
+
+            if (publishing) search.publishing = publishing;
+            if (title) search.title = title;
+
+            const query = await Books.find(search);
             res.status(200).send(query);
         }catch(err){
             next(err);
