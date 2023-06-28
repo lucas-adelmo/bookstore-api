@@ -61,10 +61,12 @@ const bookController = {
         try{
             let {publishing, title} = req.query;
 
+            const regex = new RegExp(title, "i");
+
             const search = {};
 
-            if (publishing) search.publishing = publishing;
-            if (title) search.title = title;
+            if (publishing) search.publishing = {$regex: publishing, $options: "i"};
+            if (title) search.title = regex;
 
             const query = await Books.find(search);
             res.status(200).send(query);
