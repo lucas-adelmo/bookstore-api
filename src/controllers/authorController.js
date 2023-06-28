@@ -15,6 +15,7 @@ const authorController = {
         try {
             let {id} = req.params;
             const author = await Authors.findById(id);
+            console.log(author);
             if (author ==! null){
                 res.status(200).json(author);
             }else{
@@ -58,3 +59,9 @@ const authorController = {
 };
 
 export default authorController;
+
+
+
+
+
+

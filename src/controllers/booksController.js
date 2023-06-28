@@ -57,10 +57,13 @@ const bookController = {
         }
     },
 
-    listBooksByPublisher: async function(req,res, next){
+    listBooksByFilter: async function(req,res, next){
         try{
-            let {publishing} = req.query;
-            const query = await Books.find({"publishing": publishing});
+            let {publishing, title} = req.query;
+            const query = await Books.find({
+                "publishing": publishing,
+                "title": title
+            });
             res.status(200).send(query);
         }catch(err){
             next(err);

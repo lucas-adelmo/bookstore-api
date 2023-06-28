@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000;
 // Therefore, we can make a conditional statement by adding "process.env.PORT" for flexibility.
 
 // The app.listen() method creates a listener server on the specified port or path.
-app.listen((port), ()=>{
+app.listen((port), () => {
     console.log(`The server are listening on http://localhost:${port}`);
 });
 
