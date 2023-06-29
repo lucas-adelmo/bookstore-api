@@ -59,14 +59,17 @@ const bookController = {
 
     listBooksByFilter: async function(req,res, next){
         try{
-            let {publishing, title} = req.query;
+            let {publishing, title, minPages, maxPages} = req.query;
 
             const regex = new RegExp(title, "i");
 
             const search = {};
 
-            if (publishing) search.publishing = {$regex: publishing, $options: "i"};
             if (title) search.title = regex;
+            if (publishing) search.publishing = {$regex: publishing, $options: "i"};
+            if (minPages) search.numberPages = {$gte: minPages};
+            if (maxPages) search.numberPages = {$lte: maxPages};
+            if (minPages && maxPages) search.numberPages = {$gte: minPages, $lte: maxPages};
 
             const query = await Books.find(search);
             res.status(200).send(query);
