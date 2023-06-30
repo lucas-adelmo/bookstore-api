@@ -1,6 +1,6 @@
 /* booksController implements the methods (middlewares specifcally) */
 
-import {Books} from "../models/index.js";
+import {Books, Authors} from "../models/index.js";
 
 const bookController = {
 
@@ -59,7 +59,7 @@ const bookController = {
 
     listBooksByFilter: async function(req,res, next){
         try{
-            let {publishing, title, minPages, maxPages} = req.query;
+            let {publishing, title, minPages, maxPages, authorName} = req.query;
 
             const regex = new RegExp(title, "i");
 
@@ -67,11 +67,19 @@ const bookController = {
 
             if (title) search.title = regex;
             if (publishing) search.publishing = {$regex: publishing, $options: "i"};
+            
             if (minPages) search.numberPages = {$gte: minPages};
             if (maxPages) search.numberPages = {$lte: maxPages};
             if (minPages && maxPages) search.numberPages = {$gte: minPages, $lte: maxPages};
 
-            const query = await Books.find(search);
+            if (authorName) {
+                const author = await Authors.findOne({ name: authorName});
+                const authorId = author._id;
+
+                search.author = authorId;
+            }
+
+            const query = await Books.find(search).populate("author");
             res.status(200).send(query);
         }catch(err){
             next(err);
