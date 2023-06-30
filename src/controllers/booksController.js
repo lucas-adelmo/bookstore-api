@@ -6,8 +6,22 @@ const bookController = {
 
     listBooks : async function(req, res, next){
         try {
-            const query = await Books.find().populate("author");
-            res.status(200).json(query);
+
+            let {limit = 5, page = 1, sortBy = "title", order = 1} = req.query;
+            limit = parseInt(limit);
+            page = parseInt(page);
+            order = parseInt(order);
+
+            if (limit>0 && page>0){
+                const query = await Books.find()
+                    .sort({[sortBy]: order})
+                    .skip((page-1) * limit)
+                    .limit(limit)
+                    .populate("author");
+                res.status(200).json(query);
+            } else {
+                res.send({message: "ValidationError", status: 400});
+            }
         } catch(err){
             next(err);
         }
@@ -63,7 +77,7 @@ const bookController = {
 
             const regex = new RegExp(title, "i");
 
-            const search = {};
+            let search = {};
 
             if (title) search.title = regex;
             if (publishing) search.publishing = {$regex: publishing, $options: "i"};
@@ -73,14 +87,21 @@ const bookController = {
             if (minPages && maxPages) search.numberPages = {$gte: minPages, $lte: maxPages};
 
             if (authorName) {
-                const author = await Authors.findOne({ name: authorName});
-                const authorId = author._id;
-
-                search.author = authorId;
+                const author = await Authors.findOne({ name: {$regex: authorName}});
+                if (author !== null){
+                    search.author = author._id;
+                } else {
+                    search = null;
+                }
             }
 
-            const query = await Books.find(search).populate("author");
-            res.status(200).send(query);
+            if (search !== null){
+                const query = await Books.find(search).populate("author");
+                res.status(200).send(query);
+            }else {
+                res.status(200).send([]);
+            }
+
         }catch(err){
             next(err);
         }
