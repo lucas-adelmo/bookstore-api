@@ -3,6 +3,7 @@
 
 import express from "express";
 import bookController from "../controllers/booksController.js";
+import toPage from "../middlewares/toPage.js";
 
 const router = express.Router();
 // A router object is an isolated instance of middleware and routes. You can think of it as 
@@ -11,8 +12,8 @@ const router = express.Router();
 // (such as get, put, post, and so on) to it just like an application. 
 
 router
-    .get("/books", bookController.listBooks)
-    .get("/books/search?", bookController.listBooksByFilter) 
+    .get("/books", bookController.listBooks, toPage)
+    .get("/books/search?", bookController.listBooksByFilter, toPage) 
     .get("/books/:id", bookController.getBookById)
     .post("/books", bookController.registerBook)
     .put("/books/:id", bookController.updateBook)

@@ -4,8 +4,9 @@ const authorController = {
 
     listAuthors : async function(req, res, next){
         try {
-            const query = await Authors.find();// It returns a Query obj. `query` is an instance of `Query`
-            res.status(200).json(query);
+            const query = Authors.find();// It returns a Query obj. `query` is an instance of `Query`
+            req.result = query;
+            next();
         } catch(err){
             next(err);
         }

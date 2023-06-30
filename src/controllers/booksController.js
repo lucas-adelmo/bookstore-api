@@ -4,24 +4,14 @@ import {Books, Authors} from "../models/index.js";
 
 const bookController = {
 
-    listBooks : async function(req, res, next){
+    listBooks : function(req, res, next){
         try {
 
-            let {limit = 5, page = 1, sortBy = "title", order = 1} = req.query;
-            limit = parseInt(limit);
-            page = parseInt(page);
-            order = parseInt(order);
+            const query = Books.find();
+            req.result = query;
 
-            if (limit>0 && page>0){
-                const query = await Books.find()
-                    .sort({[sortBy]: order})
-                    .skip((page-1) * limit)
-                    .limit(limit)
-                    .populate("author");
-                res.status(200).json(query);
-            } else {
-                res.send({message: "ValidationError", status: 400});
-            }
+            next();
+            
         } catch(err){
             next(err);
         }
@@ -30,7 +20,7 @@ const bookController = {
     getBookById : async function(req, res, next){
         try {
             let {id} = req.params;
-            const book = await Books.findById(id).populate("author");
+            const book = await Books.findById(id);
             if (book !== null){
                 res.status(200).json(book);
             }else{
@@ -43,7 +33,7 @@ const bookController = {
 
     registerBook : async function(req, res, next){
         try{
-            const book = await new Books(req.body).populate("author"); //Creating a document from Books model
+            const book = await new Books(req.body); //Creating a document from Books model
             await book.save();
             res.status(201).send(book);
         }catch(err){
@@ -54,7 +44,7 @@ const bookController = {
     updateBook: async function(req, res, next){
         try{
             let {id} = req.params;
-            await Books.findByIdAndUpdate(id, {$set: req.body}).populate("author");
+            await Books.findByIdAndUpdate(id, {$set: req.body});
             res.status(200).send("The operation was a success");
         }catch(err){
             next(err);
@@ -64,7 +54,7 @@ const bookController = {
     deleteBook: async function(req, res, next){
         try{
             let {id} = req.params;
-            await Books.findByIdAndDelete(id).populate("author");
+            await Books.findByIdAndDelete(id);
             res.status(200).send("The operation was a success");
         }catch(err){
             next(err);
@@ -96,8 +86,12 @@ const bookController = {
             }
 
             if (search !== null){
-                const query = await Books.find(search).populate("author");
-                res.status(200).send(query);
+                const query = Books
+                    .find(search)
+                    .populate("author");
+                
+                req.result = query;
+                next();
             }else {
                 res.status(200).send([]);
             }

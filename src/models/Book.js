@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import autopopulate from "mongoose-autopopulate";
 
 const {Schema} = mongoose;
 
@@ -15,7 +16,8 @@ const bookSchema = new Schema(
             {
                 type: Schema.Types.ObjectId, 
                 ref: "authors", 
-                required: [true, "author's id is required"]
+                required: [true, "author's id is required"],
+                autopopulate: true
             }
         ],
         publishing:{
@@ -39,7 +41,7 @@ const bookSchema = new Schema(
 
 // A model is a class with which we construct documents. In this case, each document will be a book 
 // with properties and behaviors as declared in our schema.
-
+bookSchema.plugin(autopopulate);
 const Books = mongoose.model("books", bookSchema);
 
 export default Books;
