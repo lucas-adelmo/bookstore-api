@@ -17,7 +17,7 @@ const authorController = {
             let {id} = req.params;
             const author = await Authors.findById(id);
             console.log(author);
-            if (author ==! null){
+            if (author !== null){
                 res.status(200).json(author);
             }else{
                 res.status(404).send({message: "Author not founded."});
@@ -41,7 +41,7 @@ const authorController = {
         try{
             let {id} = req.params;
             await Authors.findByIdAndUpdate(id, {$set: req.body});
-            res.status(200).send("The operation was a success");
+            res.status(204).send("Resource updated successfully");
         }catch(err){
             next(err);
         }

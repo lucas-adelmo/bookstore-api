@@ -23,7 +23,6 @@ const bookSchema = new Schema(
         publishing:{
             type: String, 
             required:[true, "The publishing is required"],
-            enum:["O'Reilly Media", "Addison-Wesley Professional"]
         },
         numberPages:{
             type: Number,

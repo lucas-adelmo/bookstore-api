@@ -45,7 +45,7 @@ const bookController = {
         try{
             let {id} = req.params;
             await Books.findByIdAndUpdate(id, {$set: req.body});
-            res.status(200).send("The operation was a success");
+            res.status(204).send("The operation was a success");
         }catch(err){
             next(err);
         }
