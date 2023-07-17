@@ -12,28 +12,31 @@ const bookSchema = new Schema(
             type: String, 
             required:[true, "title is required"]
         },
-        author:[
-            {
-                type: Schema.Types.ObjectId, 
-                ref: "authors", 
-                required: [true, "author's id is required"],
-                autopopulate: true
-            }
-        ],
+        author:{
+            type: [
+                {
+                    type: Schema.Types.ObjectId, 
+                    ref: "authors", 
+                    autopopulate: true
+                }
+            ],
+            required: [true, "At least one author is required"],
+        },
         publishing:{
             type: String, 
             required:[true, "The publishing is required"],
         },
         numberPages:{
             type: Number,
-            // min: [10, "the pag number is between 10 and 5000. You typed {VALUE}"],
-            // max:[5000, "the pag number is between 10 and 5000. You typed {VALUE}"] 
-            validate: {
-                validator: (value) => {
-                    return value>=10 && value<=5000;
-                },
-                message: "the pag number is between 10 and 5000. You typed {VALUE}"
-            }
+            min: [10, "the pag number is between 10 and 5000. You typed {VALUE}"],
+            max:[5000, "the pag number is between 10 and 5000. You typed {VALUE}"] 
+            // validate: {
+            //     validator: (value) => {
+            //         return value>=10 && value<=5000;
+            //     },
+            //     message: "the pag number is between 10 and 5000. You typed {VALUE}"
+            // }
+            
         }
     }
 );

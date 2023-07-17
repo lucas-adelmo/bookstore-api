@@ -5,7 +5,7 @@ function validationError(err){
         .map((err)=>err.message)
         .join("; ");
         
-    return customError(`Validation error: ${errMessage}`, 400);
+    return customError(`Validation error: ${errMessage}`, 403);
 }
 
 export default validationError;

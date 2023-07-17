@@ -1,5 +1,5 @@
 /* booksController implements the methods (middlewares specifcally) */
-
+import error404Handling from "../middlewares/error404Handling.js";
 import {Books, Authors} from "../models/index.js";
 
 const bookController = {
@@ -44,7 +44,7 @@ const bookController = {
     updateBook: async function(req, res, next){
         try{
             let {id} = req.params;
-            await Books.findByIdAndUpdate(id, {$set: req.body});
+            await Books.findByIdAndUpdate(id, {$set: req.body}, {runValidators: true});
             res.status(204).send("The operation was a success");
         }catch(err){
             next(err);
@@ -92,8 +92,8 @@ const bookController = {
                 
                 req.result = query;
                 next();
-            }else {
-                res.status(200).send([]);
+            }else{
+                error404Handling(req,res,next);
             }
 
         }catch(err){

@@ -32,6 +32,15 @@ describe("POST /books", ()=>{
 
         bookId = response.body._id;
     });
+
+    it("Should throw a Validation Error for an book without an author ", async()=>{
+        await request(app)
+            .post("/books")
+            .send({
+                author: ""
+            })
+            .expect(403);
+    });
 });
 
 describe("GET /books", ()=>{
@@ -43,15 +52,27 @@ describe("GET /books", ()=>{
 
     test.each([
         ["title", "SomeTitle"],
-        ["author", "mockAuthorId"],
+        ["authorName", "SomeAuthor"],
         ["publishing", "SomePublishing"],
         ["numberPages", "1000"]
-    ])("must list books by a filter", async (key, propertie)=>{
+    ])("must list books by a %s filter", async (key, propertie)=>{
 
         await request(app)
             .get(`/books/search?${key.replaceAll("\"", "")}=${propertie.replaceAll("\"", "")}`)
             .expect(200);
     });
+
+    test.each([
+        ["title", "non-ExistentTitle"],
+        ["authorName", "non-ExistentAuthor"],
+        ["publishing", "non-ExistentPublishing"],
+    ])("must return an 404 Error for %s filter", async (key, propertie)=>{
+
+        await request(app)
+            .get(`/books/search?${key.replaceAll("\"", "")}=${propertie.replaceAll("\"", "")}`)
+            .expect(404);
+    });
+
 });
 
 describe("PUT /books/:id", ()=>{
@@ -65,8 +86,19 @@ describe("PUT /books/:id", ()=>{
             .put(`/books/${bookId}`)
             .send(objUpdated)
             .expect(204);
-    })
-})
+    });
+
+    test.each([
+        ["title", {title:""}],
+        ["publishing", {publishing:""}],
+        ["numberPages", {numberPages: 1}]
+    ])("Should throw a Validation Error for mismatched data type when updating %s in the Books Schema", async(key, objUpdated)=>{
+        await request(app)
+            .put(`/books/${bookId}`)
+            .send(objUpdated)
+            .expect(403);
+    });
+});
 
 describe("DELETE /books/:id", () =>{
     it("must delete an book of the db", async () =>{
